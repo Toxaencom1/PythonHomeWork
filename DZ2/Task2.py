@@ -14,4 +14,4 @@ for i in range(1, numbers + 1):
     sequence.append(round(fSequence, 2))
 
 print(f"Для N = {numbers} -> {sequence}")
-print(f"Сумма элементов последовательности равна: {sum(sequence)}")
+print(f"Сумма элементов последовательности равна: {round(sum(sequence),3)}")
