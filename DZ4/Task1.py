@@ -19,58 +19,54 @@ while True:
 
 polynom = ''
 degree = []
-for i in range(degree_input, 0, -1):
+for i in range(degree_input, -1, -1):
     degree.append(i)
+print(degree)
 
 k = []
-for i in range(degree_input):
+for i in range(len(degree)+1):
     k.append(randint(-100, 100))
-last = randint(-100, 100)  # Генератор числа для последнего
-print(f'{k},[{last}] - Коэффициенты')
-for i in range(degree_input):
-    if degree[i] != 1:
-        if k[i] > 1:
-            polynom += str(k[i]) + '*' + 'x**' + str(degree[i])
-        elif k[i] == 0:
-            if k[i + 1] > 0:
-                polynom += '+'
-                if degree_input == 2 and k[i - 1] == 0:
-                    polynom = polynom.lstrip(' + ')
-        elif k[i] == 1:
-            polynom += 'x**' + str(degree[i])
-        elif k[i] == (-1):
-            polynom += '-' + 'x**' + str(degree[i])
-        else:
-            polynom += str(k[i]) + '*' + 'x**' + str(degree[i])
-        if k[i + 1] > 0:
-            if k[i] != 0:
-                polynom += '+'
-    else:  # Если 'x' в степени 1
-        if k[i] > 1:
-            polynom += str(k[i]) + '*' + 'x'
-        elif k[i] == 0:
+k[-1]=-1 # запасной, чтобы проверять следующий элемент без ошибки и в конце не ставить '+'
+print(f'{k}, - Коэффициенты')
+for i in range(len(degree)):
+    if degree[i] == 0:
+        if k[i] != 0:
+            polynom += str(k[i])
+    elif degree[i] == 1:
+        if k[i] == 0:
             pass
         elif k[i] == 1:
             polynom += 'x'
-        elif k[i] == (-1):
+        elif k[i] == -1:
             polynom += '-x'
         else:
             polynom += str(k[i]) + '*' + 'x'
 
-if last > 0:
-    polynom += '+' + str(last)
-    polynom = polynom.lstrip(" + ")
-elif last == 0:
-    pass
-else:
-    polynom += str(last)
+    else:
+        if k[i] == 0:
+            pass
+        elif k[i] == 1:
+            polynom += 'x**' + str(degree[i])
+        elif k[i] == -1:
+            polynom += '-x**' + str(degree[i])
+        else:
+            polynom += str(k[i]) + '*' + 'x**' + str(degree[i])
+    if k[i+1]>0:
+        polynom+='+'
+    elif k[i+1] == 0:
+        pass
 
+# print(polynom)
+# exit()
 polynom = polynom.replace('+', ' + ').replace('-', ' - ')
 if polynom.startswith(' - '):
     polynom = polynom.lstrip(" - ")
     polynom = '-' + polynom
+if polynom.startswith(' + '):
+    polynom = polynom.lstrip(" + ")
 
 polynom += ' = 0'
+print('\n Результат в файле "file.txt"')
 with open('file.txt', 'w', encoding='UTF-8') as data:
     data.write(polynom)
     data.write(f'\nНатуральная степень k = {degree_input}')
