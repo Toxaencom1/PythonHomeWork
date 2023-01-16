@@ -14,7 +14,7 @@ from functions import *
 
 
 
-def main_game(player1, player1_name, player2, player2_name, max_candys, coin):
+def winning_logic_process(player1, player1_name, player2, player2_name, max_candys, coin):
     count = 1
     while max_candys > 29:
         print(f'Ход №{count}')
@@ -74,6 +74,6 @@ if __name__ == '__main__':
 
     match vs:
         case 1:
-            main_game(first_player_turn, player1_name, second_player_turn, player2_name, max_candys, coin)
+            winning_logic_process(first_player_turn, player1_name, second_player_turn, player2_name, max_candys, coin)
         case 2:
-            main_game(first_player_turn, player1_name, bot_turn, bot_name, max_candys, coin)
+            winning_logic_process(first_player_turn, player1_name, bot_turn, bot_name, max_candys, coin)
