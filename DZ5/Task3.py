@@ -3,6 +3,7 @@
 # aaaaabbbcccc -> 5a3b4c
 # 5a3b4c -> aaaaabbbcccc
 
+# Не стал выносить функции в файл, тут кода немного
 
 def archive(rle: str):
     count = 0

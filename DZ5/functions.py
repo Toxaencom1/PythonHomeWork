@@ -67,7 +67,7 @@ def coin_catch():
             coin_side = 'Орел'
         case 2:
             coin_side = 'Решка'
-    print(f'Первым ходит - {coin_side}')
+    print(f'ходит первым - {coin_side}')
     return choice
 
 
@@ -133,4 +133,54 @@ def winning_logic_process(player1, player1_name, player2, player2_name, candy, c
         count += 1
 
 # Functions for first task "end"
+# ==============================================================================================================
+# Functions for second task
+
+def validate_input(symbol):
+    while True:
+        try:
+            cell = int(input(f'Игрок {symbol} - Введите номер клетки: '))
+            if cell >= 1 and cell <= 9:
+                return cell
+            else:
+                print('Можно взять только от 1 до 9и')
+        except ValueError:
+            print('Возьмите от 1 до 9, а не то что вы написали')
+
+
+def desk_print(desk):
+    print('=========================')
+    for i in range(len(desk)):
+        if i == 3 or i == 6 or i == 9:
+            print('\n-------------------------')
+        print(f'|\t{desk[i]}\t', end='|')
+    print('\n=========================')
+
+
+def insert_symbol_in_cell(symbol,cells):
+    while True:
+        input_value = validate_input(symbol)
+        if input_value not in cells:
+            print('Тут уже занято')
+            continue
+        for i in range(len(cells)):
+            if cells[i] == input_value:
+                cells[i] = symbol
+                break
+        break
+
+
+def check_winner(cells):
+    if cells[0] == cells[1] == cells[2] or \
+            cells[3] == cells[4] == cells[5] or \
+            cells[6] == cells[7] == cells[8] or \
+            cells[0] == cells[3] == cells[6] or \
+            cells[1] == cells[4] == cells[7] or \
+            cells[2] == cells[5] == cells[8] or \
+            cells[0] == cells[4] == cells[8] or \
+            cells[6] == cells[4] == cells[2]:
+        return False
+    return True
+
+# Functions for second task "end"
 # ==============================================================================================================
