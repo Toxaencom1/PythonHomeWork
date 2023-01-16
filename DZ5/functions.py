@@ -157,7 +157,19 @@ def desk_print(desk):
     print('\n=========================')
 
 
-def insert_symbol_in_cell(symbol,cells):
+# def insert_symbol_in_cell(symbol,cells):  # Функция для игры глупых ботов
+#     while True:  # Раскомментируйте этот метод и закомментируйте метод ниже с таким же названием
+#         time.sleep(1)
+#         input_value = randint(1,9)
+#         if input_value not in cells:
+#             continue
+#         for i in range(len(cells)):
+#             if cells[i] == input_value:
+#                 cells[i] = symbol
+#                 break
+#         break
+
+def insert_symbol_in_cell(symbol,cells):  # вот этот
     while True:
         input_value = validate_input(symbol)
         if input_value not in cells:
@@ -168,6 +180,7 @@ def insert_symbol_in_cell(symbol,cells):
                 cells[i] = symbol
                 break
         break
+
 
 
 def check_winner(cells):

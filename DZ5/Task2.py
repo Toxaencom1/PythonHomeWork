@@ -2,21 +2,30 @@
 # НЕОБЯЗАТЕЛЬНО: Добавить игру против бота с интеллектом.
 from functions import *
 
-#Режим только против второго игрока ((
+
+# Режим только против второго игрока ((
 
 def main_game():
+    count = 1
     while True:
         insert_symbol_in_cell('X', cells)
         desk_print(cells)
+        count += 1
+        print(count)
         end_game = check_winner(cells)
         if not end_game:
             print(f'Игрок X победил!')
             break
         insert_symbol_in_cell('0', cells)
         desk_print(cells)
+        count += 1
+        print(count)
         end_game = check_winner(cells)
         if not end_game:
             print(f'Игрок 0 победил!')
+            break
+        if count > 8:
+            print('Ничья!')
             break
 
 
