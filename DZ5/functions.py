@@ -71,16 +71,8 @@ def coin_catch():
     return choice
 
 
-def first_player_turn(candy, player1_name):
+def player_turn(candy, player1_name):
     print(f'{player1_name}, возьмите конфеты: ')
-    player1 = validate_pick_candy_input()
-    candy -= player1
-    print(f"Осталось конфет: {candy}")
-    return candy
-
-
-def second_player_turn(candy, player2_name):
-    print(f'{player2_name}, возьмите конфеты: ')
     player1 = validate_pick_candy_input()
     candy -= player1
     print(f"Осталось конфет: {candy}")
@@ -98,5 +90,47 @@ def bot_turn(candy, bot_name):
     candy -= bot_choice
     print(f"Осталось конфет: {candy}")
     return candy
+
+
+def winning_logic_process(player1, player1_name, player2, player2_name, candy, coin):
+    count = 1  # Декоративный
+    while candy > 29:
+        print(f'Ход №{count}')
+        if coin == 1:
+            candy = player1(candy, player1_name)
+            if candy == 29:
+                candy = player2(candy, player2_name)
+                print(f'{player1_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            elif candy < 29:
+                print(f'{player2_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            candy = player2(candy, player2_name)
+            if candy == 29:
+                candy = player1(candy, player1_name)
+                print(f'{player2_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            elif candy < 29:
+                print(f'{player1_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+        if coin == 2:
+            candy = player2(candy, player2_name)
+            if candy == 29:
+                candy = player1(candy, player1_name)
+                print(f'{player2_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            elif candy < 29:
+                print(f'{player1_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            candy = player1(candy, player1_name)
+            if candy == 29:
+                candy = player2(candy, player2_name)
+                print(f'{player1_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+            elif candy < 29:
+                print(f'{player2_name} забирает оставшиеся {candy} конфет и побеждает!')
+                break
+        count += 1
+
 # Functions for first task "end"
 # ==============================================================================================================

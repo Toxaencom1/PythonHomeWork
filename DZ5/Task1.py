@@ -13,52 +13,9 @@ import time
 from functions import *
 
 
-
-def winning_logic_process(player1, player1_name, player2, player2_name, max_candys, coin):
-    count = 1
-    while max_candys > 29:
-        print(f'Ход №{count}')
-        if coin == 1:
-            max_candys = player1(max_candys, player1_name)
-            if max_candys == 29:
-                max_candys = player2(max_candys, player2_name)
-                print(f'{player1_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            elif max_candys < 29:
-                print(f'{player2_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            max_candys = player2(max_candys, player2_name)
-            if max_candys == 29:
-                max_candys = player1(max_candys, player1_name)
-                print(f'{player2_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            elif max_candys < 29:
-                print(f'{player1_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-        if coin == 2:
-            max_candys = player2(max_candys, player2_name)
-            if max_candys == 29:
-                max_candys = player1(max_candys, player1_name)
-                print(f'{player2_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            elif max_candys < 29:
-                print(f'{player1_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            max_candys = player1(max_candys, player1_name)
-            if max_candys == 29:
-                max_candys = player2(max_candys, player2_name)
-                print(f'{player1_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-            elif max_candys < 29:
-                print(f'{player2_name} забирает оставшиеся {max_candys} конфет и побеждает!')
-                break
-        count += 1
-
-
-# =====================================================================================================================
-if __name__ == '__main__':
+def main():
     print("Условия: Играют два игрока делая ход друг после друга. Первый ход определяется жеребьёвкой.\n\
-    За один ход можно забрать не более чем 28 конфет.\nВсе конфеты оппонента достаются сделавшему последний ход.\n")
+        За один ход можно забрать не более чем 28 конфет.\nВсе конфеты оппонента достаются сделавшему последний ход.\n")
     player1_name = input("Введите имя первого игрока: ")
     bot_name = '\"Умный бот\"'
     vs = validate_vs_choice_input()
@@ -74,6 +31,10 @@ if __name__ == '__main__':
 
     match vs:
         case 1:
-            winning_logic_process(first_player_turn, player1_name, second_player_turn, player2_name, max_candys, coin)
+            winning_logic_process(player_turn, player1_name, player_turn, player2_name, max_candys, coin)
         case 2:
-            winning_logic_process(first_player_turn, player1_name, bot_turn, bot_name, max_candys, coin)
+            winning_logic_process(player_turn, player1_name, bot_turn, bot_name, max_candys, coin)
+
+
+if __name__ == '__main__':
+    main()

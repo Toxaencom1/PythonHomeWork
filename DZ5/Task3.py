@@ -48,6 +48,7 @@ def write_file(source: str):
         data.write(source)
 
 
+# ====================================================================================================================
 rle = read_file()
 print(f'{rle} - Изначальные данные')
 rle = rle.strip()
@@ -59,4 +60,3 @@ elif rle[0].isdigit():
     file_unpack = unpack_file(rle)
     write_file(file_unpack)
     print(file_unpack)
-
