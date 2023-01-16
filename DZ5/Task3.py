@@ -28,9 +28,14 @@ def unpack_file(rle: str):
     unpack = ''
     symbol = ''
     digit = 0
+    residue = ''
     for i in range(len(rle)):
         if rle[i].isdigit():
-            digit = int(rle[i])
+            if rle[i + 1].isdigit():
+                residue += rle[i]
+                continue
+            digit = int(residue + rle[i])
+            residue = ''
             symbol = rle[i + 1]
             unpack += f'{digit * symbol}'
     return unpack
