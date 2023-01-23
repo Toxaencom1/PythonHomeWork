@@ -18,7 +18,10 @@ def show_all(db: list):
             for key, value in i.items():
                 print(f"{key}\t-", end='\t')
                 for k, v in value.items():
-                    print(f" {v} ", end='')
+                    if k == 'comment':
+                        print(f" {v} ", end='')
+                    else:
+                        print(f" {v} -", end='')
                 else:
                     print()
         else:
