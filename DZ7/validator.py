@@ -1,5 +1,3 @@
-from pathlib import Path
-
 def v_player_choice(choice, fr: int, to: int):
     if choice == 'exit':
         exit()
@@ -17,16 +15,6 @@ def v_player_choice(choice, fr: int, to: int):
                         return int(choice)
                 except ValueError:
                     print('Опять фигня получилась(((')
-
-
-def v_bd_path(path_: str):
-    while True:
-        if Path(path_).is_file():
-            return path_
-        else:
-            path_ = emergency_exit(input('Введите правильное имя базы: '))
-
-
 
 
 def emergency_exit(string_: str):
