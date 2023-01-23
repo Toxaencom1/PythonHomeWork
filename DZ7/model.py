@@ -1,5 +1,5 @@
 db_list = []
-db_path = 'database.txt'
+db_path = ''
 
 
 def read_db(path: str):
@@ -29,6 +29,7 @@ def db_choice(which: int, input_=''):
             db_path = 'recent.txt'
         case 3:
             db_path = input_
+    return db_path
 
 
 def record_write(path: str, record: str):

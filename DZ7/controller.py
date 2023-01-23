@@ -1,9 +1,11 @@
 import model
 import view
 import menu
+import validator
 
 
-model.read_db('database.txt')  # для быстрого теста открыть ком
+
+# model.read_db('database.txt')  # для быстрого теста открыть ком
 
 
 def input_handler(inp: int):
@@ -15,9 +17,12 @@ def input_handler(inp: int):
             db_choice = view.menu(menu.db_menu(), '\nВыберите файл базы данных')
             if not db_choice == 4:
                 if db_choice == 3:
-                    model.db_choice(db_choice, view.string_input('"Внимание!" - файл базы данных должен быть корневой '
-                                                                 'папке и в формате *.txt\n'
-                                                                 'Введите название файла базы данных: '))
+                    path_choice = validator.v_bd_path(
+                        view.string_input('"Внимание!" - файл базы данных должен быть корневой '
+                                          'папке и в формате *.txt\n'
+                                          'А данные формата *;*;*;* в отдельной строке\n'
+                                          'Введите название файла базы данных: '))
+                    model.db_choice(db_choice, path_choice)
                     model.read_db(model.get_db_path())
                     view.db_success(model.get_db())
                 else:
