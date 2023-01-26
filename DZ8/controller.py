@@ -1,10 +1,7 @@
 import model as m
 import view as v
 import menu
-import validator
-
-
-subj_names = m.get_subjects_names_list()
+import validator as val
 
 
 def input_handler(inp: int):
@@ -12,34 +9,38 @@ def input_handler(inp: int):
     class_path = ''
     match inp:
         case 1:
-            subj_menu_choice = v.menu(subj_names, '\nВыберите предмет')
-            print(len(m.get_subjects_names_list()))
+            class_choice = v.menu(menu.class_menu(), '\nВыберите Класс учащихся')
+            if class_choice == 3:
+                class_path = val.v_bd_path(v.string_input('\nВведите название файла\n'
+                                            'Файл должен быть Цифра_класса+Буква_класса.txt '
+                                            'и в папке classes, \n'                                            
+                                            'Формат базы - "предмет:Фамилия Имя%оценки;Фамилия Имя%оценки; итд" \n:>'))
+                m.read_class_list(class_path)
+            else:
+                class_path = m.class_choice(class_choice)
+                m.read_class_list(class_path)
+            subj_menu_choice = v.menu(m.create_subject_names_list(class_path), '\nВыберите предмет')
             if not subj_menu_choice == len(m.get_subjects_names_list()):
-                class_choice = v.menu(menu.class_menu(), '\nВыберите Класс учащихся')
-                if class_choice == 3:
-                    class_path = v.string_input('\nВведите название файла\n'
-                                                'Файл должен быть Цифра_класса+Большая_Буква_класса.txt '
-                                                'и в корне папки, \n'
-                                                'писать без расширения\n'
-                                                'Формат - "предмет:Фамилия Имя%оценки;Фамилия Имя%оценки; итд" \n:>')
-                    print(class_path)
-                    bd_class = m.read_class_list(m.class_choice(class_choice,class_path))
-                else:
-                    bd_class = m.read_class_list(m.class_choice(class_choice))
-                flag = True
-                while flag:
-                    v.show_all(bd_class, m.subj_choice(subj_menu_choice))
-                    who_working = v.which_one('\nКому дать задание?')
+                flag1 = True
+                while flag1:
+                    flag2 = True
+                    v.show_all(m.get_class_list(), m.subj_choice(subj_menu_choice))
+                    who_working = v.which_one('\nКому дать задание?', m.get_max_students())
                     evaluation = v.estimate('\nКакую оценку дать??')
                     m.set_student_mark(subj_menu_choice, who_working, evaluation)
-                    v.show_all(bd_class, m.subj_choice(subj_menu_choice))
-                    if class_choice == 3:
+                    m.record_write(class_path)
+                    while flag2:
+                        v.show_all(m.get_class_list(), m.subj_choice(subj_menu_choice))
+                        lesson_menu_choice = v.menu(menu.lesson_menu(), '\nПродолжить?')
+                        match lesson_menu_choice:
+                            case 1:
+                                flag2 = False
+                            case 2:
+                                m.delete_student_mark(subj_menu_choice, who_working, evaluation)
+                            case 3:
+                                flag1 = False
+                                flag2 = False
                         m.record_write(class_path)
-                    else:
-                        m.record_write(m.class_choice(class_choice))
-                    lesson_menu_choice = v.menu(menu.lesson_menu(), '\nПродолжить?')
-                    if lesson_menu_choice == 2:
-                        flag = False
         case 2:
             exit()
 

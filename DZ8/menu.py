@@ -12,6 +12,7 @@ def summon_menu():
     return menu_list
 def lesson_menu():
     menu_list = ['Продолжить урок',
+                 'Удалить последнюю оценку',
                  'Вернуться в главное меню'
                  ]
     return menu_list

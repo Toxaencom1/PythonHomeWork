@@ -21,12 +21,10 @@ def v_player_choice(choice, fr: int, to: int):
 
 def v_bd_path(path_: str):
     while True:
-        if Path(path_).is_file():
+        if Path('classes/'+path_).is_file() or Path('classes/'+path_.lower()).is_file() :
             return path_
         else:
-            path_ = emergency_exit(input('Введите правильное имя базы: '))
-
-
+            path_ = emergency_exit(input('Такой базы нет, или неправильно ввели, повторите: '))
 
 
 def emergency_exit(string_: str):

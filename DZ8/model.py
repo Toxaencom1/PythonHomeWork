@@ -1,5 +1,5 @@
 class_list = []
-subjects_names_list = ['математика', 'русский', 'физкультура', 'Возвращение в главное меню']
+subjects_names_list = []
 students_names = []
 
 
@@ -7,7 +7,7 @@ def read_class_list(path: str):
     global class_list
     class_list = []
     count = 0
-    with open(path, 'r', encoding='UTF-8') as file:
+    with open('classes/'+path, 'r', encoding='UTF-8') as file:
         my_list = file.readlines()
         student_list = []
         for i, line in enumerate(my_list):
@@ -30,6 +30,11 @@ def read_class_list(path: str):
         return class_list
 
 
+def get_class_list():
+    global class_list
+    return class_list
+
+
 def get_subjects_names_list():
     global subjects_names_list
     return subjects_names_list
@@ -37,6 +42,7 @@ def get_subjects_names_list():
 
 def create_subject_names_list(path: str):
     global subjects_names_list
+    subjects_names_list = []
     for i in read_class_list(path):
         for subj, stud in i.items():
             subjects_names_list.append(subj)
@@ -73,16 +79,11 @@ def record_write(path: str):
         else:
             record = record.rstrip(';')
             record += '\n'
-    with open(path, 'w', encoding='UTF-8') as file:
+    with open('classes/'+path, 'w', encoding='UTF-8') as file:
         file.write(record)
 
 
-def get_db_path():
-    global class_path
-    return class_path
-
-
-def class_list_print():
+def class_list_print():   # для отладки
     global class_list
     print(class_list)
 
@@ -91,6 +92,11 @@ def set_student_mark(subj_menu_choice: int, who_working: int, evaluation):
     global class_list
     class_list[subj_menu_choice - 1][subj_choice(subj_menu_choice)][who_working - 1][str(who_working)][
         names_list()[who_working - 1]].append(str(evaluation))
+
+def delete_student_mark(subj_menu_choice: int, who_working: int, evaluation):
+    global class_list
+    class_list[subj_menu_choice - 1][subj_choice(subj_menu_choice)][who_working - 1][str(who_working)][
+        names_list()[who_working - 1]].pop()
 
 
 def names_list() -> list:
@@ -105,3 +111,13 @@ def names_list() -> list:
                         students_names.append(f_i)
         break
     return students_names
+
+def get_max_students():
+    max_students = 0
+    for i in class_list:
+        for subj, stud in i.items():
+            for j in stud:
+                for ident, stu in j.items():
+                    if int(ident) > max_students:
+                        max_students = int(ident)
+    return max_students
