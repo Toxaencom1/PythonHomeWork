@@ -46,5 +46,5 @@ def string_input(string_: str) -> str:
     if '.txt' in record:
         return record
     else:
-        record = record.upper() + '.txt'
+        record = record + '.txt'
         return record
