@@ -48,3 +48,7 @@ def string_input(string_: str) -> str:
     else:
         record = record + '.txt'
         return record
+
+def f_i_input(string_: str) -> str:
+    record = emergency_exit(input(string_))
+    return record

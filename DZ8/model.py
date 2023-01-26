@@ -121,3 +121,29 @@ def get_max_students():
                     if int(ident) > max_students:
                         max_students = int(ident)
     return max_students
+
+
+def add_student(student_f_i: str):
+    global class_list
+    student_f_i += '% '
+    max_ = get_max_students()
+    student_f_i = student_f_i.split('%')
+    student_f_i[1] = []
+    dict_1 = {student_f_i[0]: student_f_i[1]}
+    dict_2 = {f'{max_ + 1}': dict_1}
+    for i in class_list:
+        for subj, stud in i.items():
+            stud.append(dict_2)
+
+
+def delete_student(which: int):
+    global class_list
+    record_write('recent.txt')
+    for i in class_list:
+        for subj, stud in i.items():
+            for j in stud:
+                for ident, stu in j.items():
+                    if int(ident) == which:
+                        j.pop(ident)
+                        break
+

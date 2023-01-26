@@ -19,3 +19,14 @@ def class_menu():
                  'Свой вариант'
                  ]
     return menu_list
+
+
+def action_menu():
+    menu_list = ['Провести урок',
+                 'Добавить ученика',
+                 'Удалить ученика',
+                 'Выход в главное меню'
+                 ]
+    return menu_list
+
+
