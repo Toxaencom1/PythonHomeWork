@@ -126,14 +126,14 @@ def get_max_students():
 def add_student(student_f_i: str):
     global class_list
     student_f_i += '% '
-    max_ = get_max_students()
+    max_id = get_max_students()
     student_f_i = student_f_i.split('%')
     student_f_i[1] = []
-    dict_1 = {student_f_i[0]: student_f_i[1]}
-    dict_2 = {f'{max_ + 1}': dict_1}
+    temp_dict_1 = {student_f_i[0]: student_f_i[1]}
+    temp_dict_2 = {f'{max_id + 1}': temp_dict_1}
     for i in class_list:
         for subj, stud in i.items():
-            stud.append(dict_2)
+            stud.append(temp_dict_2)
 
 
 def delete_student(which: int):
