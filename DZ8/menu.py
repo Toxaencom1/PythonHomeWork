@@ -1,13 +1,25 @@
 def main_menu():
-    menu_list = ['',
-                 ''
+    menu_list = ['Выбрать Класс',
+                 'Выход из программы'
                  ]
     return menu_list
 
 
-def search_menu():
-    menu_list = ['',
-                 ''
+def summon_menu():
+    menu_list = ['Кого вызвать',
+                 'Вернуться в главное меню'
+                 ]
+    return menu_list
+def lesson_menu():
+    menu_list = ['Продолжить урок',
+                 'Вернуться в главное меню'
+                 ]
+    return menu_list
+
+
+def mark_menu():
+    menu_list = ['Поставить отметку',
+                 'Вернуться к выбору ученика'
                  ]
     return menu_list
 

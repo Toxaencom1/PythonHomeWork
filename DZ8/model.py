@@ -1,135 +1,107 @@
-# Нужно многое менять
+class_list = []
+subjects_names_list = ['математика', 'русский', 'физкультура', 'Возвращение в главное меню']
+students_names = []
 
-db_list = []
-db_path = ''
 
-
-def read_db(path: str):
-    global db_list
-    db_list = []
+def read_class_list(path: str):
+    global class_list
+    class_list = []
     count = 0
     with open(path, 'r', encoding='UTF-8') as file:
         my_list = file.readlines()
+        student_list = []
         for i, line in enumerate(my_list):
             if count > 2:
                 break
             if line == '\n':
                 count += 1
                 continue
-            # id_dict = dict()
-            line = line.strip().split(';')
-            id_dict = {i + 1: {'lastname': line[0], 'firstname': line[1], 'phone': line[2], 'comment': line[3]}}
-            db_list.append(id_dict)
+            subject = line.split(':')[0]
+            student = line.split(':')[1].split(';')
+            for i, student_el in enumerate(student):
+                f_i = student_el.split('%')[0]
+                marks = list(student_el.split('%')[1].rstrip())
+                dict_ = {str(i + 1): {f_i: marks}}
+                student_list.append(dict_)
+            else:
+                dict_subject = {subject: student_list}
+                class_list.append(dict_subject)
+                student_list = []
+        return class_list
 
 
-def db_choice(which: int, input_=''):
-    global db_path
+def get_subjects_names_list():
+    global subjects_names_list
+    return subjects_names_list
+
+
+def create_subject_names_list(path: str):
+    global subjects_names_list
+    for i in read_class_list(path):
+        for subj, stud in i.items():
+            subjects_names_list.append(subj)
+    subjects_names_list.append('Возвращение в главное меню')
+    return subjects_names_list
+
+
+def class_choice(which: int, input_=''):
     match which:
         case 1:
-            db_path = 'database.txt'
+            return '7A.txt'
         case 2:
-            db_path = 'recent.txt'
+            return '7B.txt'
         case 3:
-            db_path = input_
-    return db_path
+            class_path_choice = input_
+            return class_path_choice
 
 
-def record_write(path: str, record: str):
-    with open(path, 'a', encoding='UTF-8') as file:
-        file.write(record + '\n')
+def subj_choice(which: int) -> str:
+    global subjects_names_list
+    return subjects_names_list[which-1]
 
 
-def remove_record(looser: int):
-    global db_list
-    temp = {}
-    if not looser > len(db_list):
-        temp = db_list.pop(looser - 1)
-        f = open('database.txt', encoding='UTF-8').readlines()
-        a = f.pop(looser - 1)
-        with open('recent.txt', 'a', encoding='UTF-8') as file:
-            file.writelines(a)
-        print(f'Запись - {a}отравлена в файл recent.txt c удаленными записями из базы\n')
-        with open('database.txt', 'w', encoding='UTF-8') as file:
-            file.writelines(f)
-    else:
-        print('Нет такой записи')
-    return temp
-
-
-def find_contact(search_menu_choice: int, search_input: str) -> list:
-    global db_list
-    match search_menu_choice:
-        case 1:
-            return case_choice(search_input, 'lastname')
-        case 2:
-            return case_choice(search_input, 'firstname')
-        case 3:
-            return case_choice(search_input, 'phone')
-        case 4:
-            return case_choice(search_input, 'comment')
-
-
-def case_choice(search_input, key_type: str) -> list:
-    search_dict = []
-    for item in db_list:
-        for key, value in item.items():
-            if value.get(key_type) == search_input.title() or value.get(key_type) == search_input.lower() or \
-                    value.get(key_type) == search_input.title() + 'а' or value.get(
-                key_type) == search_input.lower() + 'а' or \
-                    family_strip(value.get(key_type)) == family_strip(search_input.title()) or \
-                    family_strip(value.get(key_type)) == family_strip(search_input.lower()):
-                search_dict.append(item)
-    else:
-        print('Поиск закончен')
-    return search_dict
-
-
-def get_right_contact(dict_: list, ident):
-    for item in dict_:
-        for k, v in item.items():
-            if k == ident:
-                return item
-
-
-def change_contact(dict_: list, ident: int, category: int, changes: str):
-    global db_list
-    remove_record(ident)
-    match category:
-        case 1:
-            dict_[ident]['lastname'] = changes
-        case 2:
-            dict_[ident]['firstname'] = changes
-        case 3:
-            dict_[ident]['phone'] = changes
-        case 4:
-            dict_[ident]['comment'] = changes
-    db_list.append(dict_)
-    contact = f"{dict_[ident].get('lastname')};{dict_[ident].get('firstname')};\
-{dict_[ident].get('phone')};{dict_[ident].get('comment')}"
-    record_write('database.txt', contact)
-    print('\nЗапись успешно заменена!\n')
-
-
-def family_strip(firstname: str) -> str:
-    firstname = firstname.rstrip('а')
-    return firstname
-
-
-def get_db():
-    global db_list
-    return db_list
-
-
-def set_db(new_record: dict):
-    global db_list
-    db_list.append(new_record)
+def record_write(path: str):
+    global class_list
+    record = ''
+    for i in class_list:
+        for subj, stud in i.items():
+            record += subj + ':'
+            for j in stud:
+                for ident, stu in j.items():
+                    for f_i, marks in stu.items():
+                        record += f'{f_i}%{"".join(marks)};'
+        else:
+            record = record.rstrip(';')
+            record += '\n'
+    with open(path, 'w', encoding='UTF-8') as file:
+        file.write(record)
 
 
 def get_db_path():
-    global db_path
-    return db_path
+    global class_path
+    return class_path
 
 
-def set_db_path(path: str):
-    global db_path
-    db_path = path
+def class_list_print():
+    global class_list
+    print(class_list)
+
+
+def set_student_mark(subj_menu_choice: int, who_working: int, evaluation):
+    global class_list
+    class_list[subj_menu_choice - 1][subj_choice(subj_menu_choice)][who_working - 1][str(who_working)][
+        names_list()[who_working - 1]].append(str(evaluation))
+
+
+def names_list() -> list:
+    global class_list
+    global students_names
+    students_names = []
+    for i in class_list:
+        for subj, stud in i.items():
+            for j in stud:
+                for ident, stu in j.items():
+                    for f_i, marks in stu.items():
+                        students_names.append(f_i)
+        break
+    return students_names
