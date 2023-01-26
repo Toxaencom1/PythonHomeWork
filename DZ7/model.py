@@ -1,9 +1,9 @@
-class_list = []
-class_path = ''
+db_list = []
+db_path = ''
 
 
 def read_db(path: str):
-    global class_list
+    global db_list
     db_list = []
     count = 0
     with open(path, 'r', encoding='UTF-8') as file:
@@ -21,7 +21,7 @@ def read_db(path: str):
 
 
 def db_choice(which: int, input_=''):
-    global class_path
+    global db_path
     match which:
         case 1:
             db_path = 'database.txt'
@@ -38,7 +38,7 @@ def record_write(path: str, record: str):
 
 
 def remove_record(looser: int):
-    global class_list
+    global db_list
     temp = {}
     if not looser > len(db_list):
         temp = db_list.pop(looser - 1)
@@ -55,7 +55,7 @@ def remove_record(looser: int):
 
 
 def find_contact(search_menu_choice: int, search_input: str) -> list:
-    global class_list
+    global db_list
     match search_menu_choice:
         case 1:
             return case_choice(search_input, 'lastname')
@@ -69,7 +69,7 @@ def find_contact(search_menu_choice: int, search_input: str) -> list:
 
 def case_choice(search_input, key_type: str) -> list:
     search_dict = []
-    for item in class_list:
+    for item in db_list:
         for key, value in item.items():
             if value.get(key_type) == search_input.title() or value.get(key_type) == search_input.lower() or \
                     value.get(key_type) == search_input.title() + 'а' or value.get(
@@ -90,7 +90,7 @@ def get_right_contact(dict_: list, ident):
 
 
 def change_contact(dict_: list, ident: int, category: int, changes: str):
-    global class_list
+    global db_list
     remove_record(ident)
     match category:
         case 1:
@@ -114,20 +114,20 @@ def family_strip(firstname: str) -> str:
 
 
 def get_db():
-    global class_list
+    global db_list
     return db_list
 
 
 def set_db(new_record: dict):
-    global class_list
+    global db_list
     db_list.append(new_record)
 
 
 def get_db_path():
-    global class_path
+    global db_path
     return db_path
 
 
 def set_db_path(path: str):
-    global class_path
+    global db_path
     db_path = path
