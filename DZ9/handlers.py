@@ -176,7 +176,7 @@ async def mes_all(message: types.Message):
                     bot = bot_turn()
                     mes = win(bot, 'Бот', player_name)
                     await message.answer(mes)
-        await message.answer(f'Осталось конфет {get_total()}')
+        await message.answer(f'Осталось конфет {get_total()}')  # <-- Вот эта строка была закоментированна 
     else:
         await message.answer(f'{message.from_user.full_name}, для того чтобы взять конфеты с кона '
                              f'введи количество без букв"')
