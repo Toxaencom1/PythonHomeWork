@@ -153,7 +153,7 @@ async def mes_hi(message: types.Message):
 @dp.message_handler()
 async def mes_all(message: types.Message):
     print(message.text)
-    if message.text.isdigit():
+    if message.text.isdigit() or message.text.replace('-', '').isdigit():
         global total
         global coin
         player_name = message['from']['first_name']
@@ -179,7 +179,7 @@ async def mes_all(message: types.Message):
         await message.answer(f'Осталось конфет {get_total()}')  # <-- Вот эта строка была закоментированна 
     else:
         await message.answer(f'{message.from_user.full_name}, для того чтобы взять конфеты с кона '
-                             f'введи количество без букв"')
+                             f'введи количество без букв')
 
 
 def get_total():
