@@ -97,7 +97,7 @@ def phrase_calc(string_: str):
             while i < len(string_):
                 if string_[i] == '*':
                     string_ = multiply(string_)
-                if string_[i] == '/':
+                elif string_[i] == '/':
                     string_ = div(string_)
                     continue
                 i += 1

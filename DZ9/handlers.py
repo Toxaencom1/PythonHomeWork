@@ -1,15 +1,18 @@
 from create import dp
 from aiogram import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.dispatcher.filters import Text
 from random import randint
 import time
 import calc
+from keyboards import *
+from datetime import datetime
 
 total = 0
 coin = 0
 
 RULES = """ Правила игры конфеты: Для начала устанавливается общее количество конфет (можно выбрать рекомендуемое 150)
-после определяют кто будет ходить первым, игрок подкидывает монетку выбрав орел или решка (команды /Orel или /Reshka), 
+после определяют кто будет ходить первым, игрок подкидывает монетку выбрав орел или решка (команды /Орел или /Решка), 
 и дальше участники игры берут с кона конфеты (просто вводите в чат число), 
 можно брать от 1й до 28 конфет, кто последним заберет оставшиеся конфеты, побеждает!
 """
@@ -18,30 +21,47 @@ RULES = """ Правила игры конфеты: Для начала уста
 @dp.message_handler(commands=['calc'])
 async def phrase_calc_start(message: types.Message):
     print(message.text)
-    if ':' in message.text.split()[1]:
-        temp = message.text.split()[1].replace(':', '/')
+    if message.text == '/calc':
+        await message.answer(f'Это калькулятор выражений без скобок')
+        await message.answer(f'чтобы им воспользоваться, введите команду /calc, пробел и выражение')
+        await message.answer(f'например "/calc 150-29*5"')
     else:
-        temp = message.text.split()[1]
-    calculate = round(calc.phrase_calc(temp), 2)
-    await message.answer(f'Результат выражения = {calculate}')
+        if ':' in message.text.split()[1]:
+            temp = message.text.split()[1].replace(':', '/')
+        else:
+            temp = message.text.split()[1]
+        calculate = round(calc.phrase_calc(temp), 2)
+        await message.answer(f'Результат выражения = {calculate}')
 
 
 @dp.message_handler(commands=['start'])
 async def mes_start(message: types.Message):
     print(message.text)
-    end()  # Обнуляет Total и Coin
-    await message.answer(f'Привет {message.from_user.first_name} Мы будем играть с тобой в конфетки\n')
+    global total
+    global coin
+    total = 0
+    coin = 0
+    await message.answer(f'Привет {message.from_user.first_name} Мы будем играть с тобой в конфетки\n',
+                         reply_markup=start_menu_kb)
     time.sleep(0.3)
     await message.answer(text=RULES)
     time.sleep(0.3)
     await message.answer('Введи "/set количество" конфет на кону в игре '
-                         'или нажми сюда для 150 конфет по умолчанию "/set_150"')
+                         'или выбери по умолчанию "/150"')
+    log_user = []
+    log_user.append(datetime.today().strftime("%d/%m/%y %H:%M:%S"))
+    log_user.append(message.from_user.full_name)
+    log_user.append(message.from_user.id)
+    log_user.append(message.from_user.username)
+    log_user = list(map(str, log_user))
+    with open('log.txt', 'a', encoding='UTF-8') as file:
+        file.write('/start ▲ ' + ' ▲ '.join(log_user) + '\n')
 
 
 @dp.message_handler(commands=['help'])
 async def help_start(message: types.Message):
     print(message.text)
-    await message.answer(f'Приветствую {message.from_user.first_name}!')
+    await message.answer(f'Приветствую {message.from_user.first_name}!', reply_markup=help_menu_kb)
     time.sleep(0.5)
     await message.answer(f'Для просмотра инструкций к игре введите /start\n'
                          f'Так же можно закончить игру с помощью /end\n'
@@ -56,35 +76,37 @@ async def set_total(message: types.Message):
     count = int(message.text.split()[1])
     total = count
     await message.answer(f'Установленно количество конфет = {total}')
-    await message.answer(f'Теперь подбрось монетку, выбери "/Orel" - Орел или "/Reshka" - Решка')
+    await message.answer(f'Теперь подбрось монетку, выбери Орел или Решка',
+                         reply_markup=set_menu_kb)
     await message.delete()
 
 
-@dp.message_handler(commands=['set_150'])
+@dp.message_handler(commands=['150'])
 async def set_total_150(message: types.Message):
     print(message.text)
     global total
     total = 150
     await message.answer(f'Установленно количество конфет = {total}')
-    await message.answer(f'Теперь подбросим монетку, выбери "/Orel" - Орел или "/Reshka" - Решка')
+    await message.answer(f'Теперь подбросим монетку, выбери Орел или Решка',
+                         reply_markup=set_menu_kb)
     await message.delete()
 
 
 @dp.message_handler(commands=['end'])
 async def end_game(message: types.Message):
     print(message.text)
-    end()
+    end('Отсутсвует, прекращено командой ')
     await message.answer(f'Игра завершена, или можно начать сначала, нажми /start')
 
 
 @dp.message_handler(commands=['get_total'])
 async def get_total_candys(message: types.Message):
     print(message.text)
-    await message.answer(f'Вот хитрец!!!! ладно, на кону осталось {get_total()} конфет.')
+    await message.answer(f'На кону осталось {get_total()} конфет.')
     await message.delete()
 
 
-@dp.message_handler(commands=['Orel'])
+@dp.message_handler(commands=['Орел'])
 async def coin_O_choice(message: types.Message):
     print(message.text)
     global total
@@ -98,23 +120,23 @@ async def coin_O_choice(message: types.Message):
             case 2:
                 await message.answer('Выпала "Решка"!')
         match message.text:
-            case '/Orel':
+            case '/Орел':
                 if coin == 1:
                     mes = f'Первым ходит {message.from_user.first_name}\n' \
                           f'Бери конфеты'
-                    await message.answer(mes)
+                    await message.answer(mes, reply_markup=pick_candys_kb)
                 else:
                     bot_pick = bot_turn()
                     await message.answer('Первым ходит бот! ')
                     await message.answer(f'Бот берет {bot_pick} конфет')
-                    await message.answer('Ваш ход, берите конфеты')
+                    await message.answer('Ваш ход, берите конфеты', reply_markup=pick_candys_kb)
             case _:
                 pass
     else:
         await message.answer('Сначала задайте количество конфет')
 
 
-@dp.message_handler(commands=['Reshka'])
+@dp.message_handler(commands=['Решка'])
 async def coin_P_choice(message: types.Message):
     print(message.text)
     global total
@@ -128,16 +150,16 @@ async def coin_P_choice(message: types.Message):
             case 2:
                 await message.answer('Выпала "Решка"!')
         match message.text:
-            case '/Reshka':
+            case '/Решка':
                 if coin == 2:
                     mes = f'Первым ходит {message.from_user.first_name}\n' \
                           f'Бери конфеты'
-                    await message.answer(mes)
+                    await message.answer(mes, reply_markup=pick_candys_kb)
                 else:
                     bot_pick = bot_turn()
                     await message.answer('Первым ходит бот! ')
                     await message.answer(f'Бот берет {bot_pick} конфет')
-                    await message.answer('Ваш ход, берите конфеты')
+                    await message.answer('Ваш ход, берите конфеты', reply_markup=pick_candys_kb)
             case _:
                 pass
     else:
@@ -187,20 +209,21 @@ def get_total():
     return total
 
 
-def win(get: int, player_name: str, opponent_name: str):
+def win(took_candy: int, player_name: str, opponent_name: str):
     global total
     global coin
     mes = ''
     temp = randint(1, 28)
     if total > 29:
-        mes = f'{player_name} взял {get} конфет '
+        mes = f'{player_name} взял {took_candy} конфет '
     elif total == 29:
-        mes = f'{player_name} Выиграл!!!\nСколько бы не взял {opponent_name}, например {temp} конфет\n' \
+        mes = f'Осталось конфет - {total}\n\n' \
+              f'{player_name} Выиграл!!!\nСколько бы не взял {opponent_name}, например {temp} конфет\n' \
               f'{player_name} забирает оставшиеся {total - temp} и побеждает'
-        end()
+        end(player_name)
     elif total <= 28:
-        mes = f'{player_name} берет {get} конфет\n{opponent_name} Выиграл, забрав последние {total} конфет'
-        end()
+        mes = f'{player_name} берет {took_candy} конфет\n{opponent_name} Выиграл, забрав последние {total} конфет'
+        end(opponent_name)
     return mes
 
 
@@ -215,8 +238,14 @@ def bot_turn():
     return bot
 
 
-def end():
+def end(winner_name):
     global total
     global coin
     total = 0
     coin = 0
+    log_user = []
+    log_user.append(datetime.today().strftime("%d/%m/%y %H:%M:%S"))
+    log_user.append('END GAME')
+    log_user = list(map(str, log_user))
+    with open('log.txt', 'a', encoding='UTF-8') as file:
+        file.write('/end ▲ ' + f'Победитель - {winner_name} ▲ ' + ' ▲ '.join(log_user) + '\n')
