@@ -95,7 +95,7 @@ async def set_total_150(message: types.Message):
 @dp.message_handler(commands=['end'])
 async def end_game(message: types.Message):
     print(message.text)
-    end('Отсутсвует, прекращено командой ')
+    end('Отсутствует, прекращено командой ')
     await message.answer(f'Игра завершена, или можно начать сначала, нажми /start')
 
 
