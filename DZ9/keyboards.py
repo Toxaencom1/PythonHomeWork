@@ -27,4 +27,4 @@ pick_candys_kb.row(KeyboardButton('15'), KeyboardButton('16'), KeyboardButton('1
 pick_candys_kb.row(KeyboardButton('22'), KeyboardButton('23'), KeyboardButton('24'),
                    KeyboardButton('25'), KeyboardButton('26'), KeyboardButton('27'),
                    KeyboardButton('28'), )
-pick_candys_kb.insert(KeyboardButton('/end'))
+pick_candys_kb.row(KeyboardButton('/start'), KeyboardButton('/end'))

@@ -76,8 +76,9 @@ async def help_start(message: types.Message):
 async def set_total(message: types.Message):
     print(message.text)
     global total
-    count = int(message.text.split()[1])
-    total = count
+    global log_list
+    log_list = []
+    total = int(message.text.split()[1])
     log_list.append(f'Всего = {total}')
     await message.answer(f'Установленно количество конфет = {total}')
     await message.answer(f'Теперь подбрось монетку, выбери Орел или Решка',
@@ -89,6 +90,8 @@ async def set_total(message: types.Message):
 async def set_total_150(message: types.Message):
     print(message.text)
     global total
+    global log_list
+    log_list = []
     total = 150
     log_list.append(f'Всего = {total}')
     await message.answer(f'Установленно количество конфет = {total}')
@@ -227,7 +230,6 @@ def get_total():
 def win(took_candy: int, player_name: str, opponent_name: str):
     global total
     global coin
-    print(f'{total} - win')
     mes = ''
     temp = randint(1, 28)
     if total > 29:
@@ -269,5 +271,5 @@ def end(winner_name):
     log_user = list(map(str, log_user))
     with open('log.txt', 'a', encoding='UTF-8') as file:
         file.write('/end ▲ ' + f'Победитель - {winner_name} ▲ ' + ' ▲ '.join(
-            log_user) + 'Ходы игроков - ' + f'{log_list}' + '\n')
+            log_user) + ' ▲ Ходы игроков - ' + f'{log_list}' + '\n')
     log_list = []
