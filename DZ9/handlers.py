@@ -10,6 +10,7 @@ from datetime import datetime
 
 total = 0
 coin = 0
+log_list = []
 
 RULES = """ Правила игры конфеты: Для начала устанавливается общее количество конфет (можно выбрать рекомендуемое 150)
 после определяют кто будет ходить первым, игрок подкидывает монетку выбрав орел или решка (команды /Орел или /Решка), 
@@ -39,6 +40,8 @@ async def mes_start(message: types.Message):
     print(message.text)
     global total
     global coin
+    global log_list
+    log_list = []
     total = 0
     coin = 0
     await message.answer(f'Привет {message.from_user.first_name} Мы будем играть с тобой в конфетки\n',
@@ -75,6 +78,7 @@ async def set_total(message: types.Message):
     global total
     count = int(message.text.split()[1])
     total = count
+    log_list.append(f'Всего = {total}')
     await message.answer(f'Установленно количество конфет = {total}')
     await message.answer(f'Теперь подбрось монетку, выбери Орел или Решка',
                          reply_markup=set_menu_kb)
@@ -86,6 +90,7 @@ async def set_total_150(message: types.Message):
     print(message.text)
     global total
     total = 150
+    log_list.append(f'Всего = {total}')
     await message.answer(f'Установленно количество конфет = {total}')
     await message.answer(f'Теперь подбросим монетку, выбери Орел или Решка',
                          reply_markup=set_menu_kb)
@@ -127,6 +132,8 @@ async def coin_O_choice(message: types.Message):
                     await message.answer(mes, reply_markup=pick_candys_kb)
                 else:
                     bot_pick = bot_turn()
+                    total -= bot_pick
+                    log_list.append(bot_pick)
                     await message.answer('Первым ходит бот! ')
                     await message.answer(f'Бот берет {bot_pick} конфет')
                     await message.answer('Ваш ход, берите конфеты', reply_markup=pick_candys_kb)
@@ -157,6 +164,8 @@ async def coin_P_choice(message: types.Message):
                     await message.answer(mes, reply_markup=pick_candys_kb)
                 else:
                     bot_pick = bot_turn()
+                    total -= bot_pick
+                    log_list.append(bot_pick)
                     await message.answer('Первым ходит бот! ')
                     await message.answer(f'Бот берет {bot_pick} конфет')
                     await message.answer('Ваш ход, берите конфеты', reply_markup=pick_candys_kb)
@@ -192,12 +201,18 @@ async def mes_all(message: types.Message):
                 await message.answer(mes)
             else:
                 total -= player_get
+                log_list.append(player_get)
                 mes = win(player_get, player_name, 'Бот')
                 await message.answer(mes)
                 if total > 29:
                     bot = bot_turn()
+                    log_list.append(bot)
                     mes = win(bot, 'Бот', player_name)
+                    total -= bot
                     await message.answer(mes)
+                    if total <= 29:
+                        mes = win(bot, 'Бот', player_name)
+                        await message.answer(mes)
         await message.answer(f'Осталось конфет {get_total()}')  # <-- Вот эту строку открыл для отображения конфет
     else:
         await message.answer(f'{message.from_user.full_name}, для того чтобы взять конфеты с кона '
@@ -212,6 +227,7 @@ def get_total():
 def win(took_candy: int, player_name: str, opponent_name: str):
     global total
     global coin
+    print(f'{total} - win')
     mes = ''
     temp = randint(1, 28)
     if total > 29:
@@ -220,9 +236,13 @@ def win(took_candy: int, player_name: str, opponent_name: str):
         mes = f'Осталось конфет - {total}\n\n' \
               f'{player_name} Выиграл!!!\nСколько бы не взял {opponent_name}, например {temp} конфет\n' \
               f'{player_name} забирает оставшиеся {total - temp} и побеждает'
+        log_list.append(temp)
+        log_list.append((total - temp))
         end(player_name)
     elif total <= 28:
         mes = f'{player_name} берет {took_candy} конфет\n{opponent_name} Выиграл, забрав последние {total} конфет'
+        log_list.append(took_candy)
+        log_list.append(total)
         end(opponent_name)
     return mes
 
@@ -234,13 +254,13 @@ def bot_turn():
         bot = randint(1, 28)
     else:
         bot = total % 29
-    total -= bot
     return bot
 
 
 def end(winner_name):
     global total
     global coin
+    global log_list
     total = 0
     coin = 0
     log_user = []
@@ -248,4 +268,6 @@ def end(winner_name):
     log_user.append('END GAME')
     log_user = list(map(str, log_user))
     with open('log.txt', 'a', encoding='UTF-8') as file:
-        file.write('/end ▲ ' + f'Победитель - {winner_name} ▲ ' + ' ▲ '.join(log_user) + '\n')
+        file.write('/end ▲ ' + f'Победитель - {winner_name} ▲ ' + ' ▲ '.join(
+            log_user) + 'Ходы игроков - ' + f'{log_list}' + '\n')
+    log_list = []
